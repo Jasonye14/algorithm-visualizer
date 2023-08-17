@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import "./SortingVisualizer.css";
 import { bubbleSortAnimations, 
         selectionSortAnimations, 
@@ -19,17 +19,18 @@ const SortingVisualizer = () => {
     const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubbleSort');
     const [numSwaps, setNumSwaps] = useState(0);
     const currentSortSwaps = useRef(0);
-    const [animationIndex, setAnimationIndex] = useState(0); 
 
     const sortAlgorithms = {
-      bubbleSort: bubbleSortAnimations,
-      selectionSort: selectionSortAnimations,
-      insertionSort: insertionSortAnimations,
-      mergeSort: mergeSortAnimations,
-      quickSort: quickSortAnimations,
-      heapSort: heapSortAnimations
-  };
+          bubbleSort: bubbleSortAnimations,
+          selectionSort: selectionSortAnimations,
+          insertionSort: insertionSortAnimations,
+          mergeSort: mergeSortAnimations,
+          quickSort: quickSortAnimations,
+          heapSort: heapSortAnimations
+      };
 
+    
+    
     function restart() {
         setArray([...initialArray.current]);  // Reset to the initial state of the array
         setNumSwaps(0);  // Reset the swap counter
@@ -45,32 +46,38 @@ const SortingVisualizer = () => {
     function animateSort(animations) {
       setIsAnimating(true);
   
-      // Begin the animation from animationIndex
-      for (let idx = animationIndex; idx < animations.length; idx++) {
-          const [firstIdx, secondIdx] = animations[idx];
+      animations.forEach((animation, idx) => {
           const timeout = setTimeout(() => {
               if (!animationActive.current) return;
   
-              setArray(prevArray => {
-                  const newArray = [...prevArray];
-                  let temp = newArray[firstIdx];
-                  newArray[firstIdx] = newArray[secondIdx];
-                  newArray[secondIdx] = temp;
-                  return newArray;
-              });
+              const [type, ...params] = animation;
   
-              // Update the swap count and animation index for each animation
-              setNumSwaps(prevNumSwaps => prevNumSwaps + 1);
-              setAnimationIndex(prevIndex => prevIndex + 1);
+              if (type === "split") {
+                  // For now, we'll just console log the splitting
+                  console.log("Splitting", ...params);
+              } else if (type === "merge") {
+                  const [index, newValue] = params;
+                  setArray(prevArray => {
+                      const newArray = [...prevArray];
+                      newArray[index] = newValue;
+                      return newArray;
+                  });
+                  
+                  // Update the swap count for each animation
+                  setNumSwaps(prevNumSwaps => prevNumSwaps + 1);
+              }
   
               if (idx === animations.length - 1) {
                   setIsAnimating(false);
               }
-          }, (idx - animationIndex) * speed);
+          }, idx * speed);
   
           timeouts.current.push(timeout);
-      }
+      });
   }
+  
+
+  
     
 
     function handleSort() {
@@ -89,10 +96,6 @@ const SortingVisualizer = () => {
         setNumSwaps(currentSortSwaps.current);
     }
 
-
-  
-  
-  
 
     return (
     <div className="SortingVisualizer">

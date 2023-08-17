@@ -73,48 +73,66 @@ export function insertionSortAnimations(array) { // technically these are shifts
 
 export function mergeSortAnimations(array) {
     const animations = [];
-    if (array.length <= 1) return array;
     const auxiliaryArray = array.slice();
     mergeSortHelper(array, 0, array.length - 1, auxiliaryArray, animations);
-    return { animations, totalSwaps: animations.length };
+    return {animations};
 }
 
-function mergeSortHelper(mainArray, startIdx, endIdx, auxiliaryArray, animations) {
+function mergeSortHelper(
+    mainArray,
+    startIdx,
+    endIdx,
+    auxiliaryArray,
+    animations
+) {
     if (startIdx === endIdx) return;
+
     const middleIdx = Math.floor((startIdx + endIdx) / 2);
+    
+    // Splitting animation
+    animations.push(["split", startIdx, middleIdx, endIdx]);
+    
     mergeSortHelper(auxiliaryArray, startIdx, middleIdx, mainArray, animations);
     mergeSortHelper(auxiliaryArray, middleIdx + 1, endIdx, mainArray, animations);
+
     doMerge(mainArray, startIdx, middleIdx, endIdx, auxiliaryArray, animations);
 }
 
-function doMerge(mainArray, startIdx, middleIdx, endIdx, auxiliaryArray, animations) {
+function doMerge(
+    mainArray,
+    startIdx,
+    middleIdx,
+    endIdx,
+    auxiliaryArray,
+    animations
+) {
     let k = startIdx;
     let i = startIdx;
     let j = middleIdx + 1;
 
     while (i <= middleIdx && j <= endIdx) {
-        animations.push([i, j, false]);  // Comparison
         if (auxiliaryArray[i] <= auxiliaryArray[j]) {
-            animations.push([k, auxiliaryArray[i], true]);  // Overwrite with value
+            // Merging animation
+            animations.push(["merge", k, auxiliaryArray[i]]);
             mainArray[k++] = auxiliaryArray[i++];
         } else {
-            animations.push([k, auxiliaryArray[j], true]);  // Overwrite with value
+            // Merging animation
+            animations.push(["merge", k, auxiliaryArray[j]]);
             mainArray[k++] = auxiliaryArray[j++];
         }
     }
 
     while (i <= middleIdx) {
-        animations.push([i, i, false]);  // Comparison
-        animations.push([k, auxiliaryArray[i], true]);  // Overwrite with value
+        animations.push(["merge", k, auxiliaryArray[i]]);
         mainArray[k++] = auxiliaryArray[i++];
     }
 
     while (j <= endIdx) {
-        animations.push([j, j, false]);  // Comparison
-        animations.push([k, auxiliaryArray[j], true]);  // Overwrite with value
+        animations.push(["merge", k, auxiliaryArray[j]]);
         mainArray[k++] = auxiliaryArray[j++];
     }
 }
+
 
 
 
