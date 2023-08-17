@@ -49,9 +49,8 @@ export function selectionSortAnimations(array) {
     return  { animations, totalSwaps };
 }
 
-export function insertionSortAnimations(arr) {
+export function insertionSortAnimations(arr) { // technically these are shifts
     const animations = [];
-    let totalShifts = 0;
     let totalSwaps = 0;
     let tempArray = [...arr];
 
@@ -59,24 +58,145 @@ export function insertionSortAnimations(arr) {
         let key = tempArray[i];
         let j = i - 1;
 
-        // Find the position where the key should be inserted
         while (j >= 0 && tempArray[j] > key) {
             animations.push([j, j + 1]); // highlight and shift
-            j = j - 1;
-            totalShifts++;
+            tempArray[j + 1] = tempArray[j];
+            j--;
+            totalSwaps++;  // Increment the swap count for every shift
         }
 
-        // If j+1 is not the original position of the key, then a swap is required
-        if (j+1 !== i) {
-            animations.push([j + 1, i]); // highlight the swap
-            let temp = tempArray[j + 1];
-            tempArray[j + 1] = key;
-            tempArray[i] = temp;
-            totalSwaps++;
+        tempArray[j + 1] = key;
+    }
+
+    return { animations, totalSwaps};
+}
+
+function merge(left, right, animations) {
+    let result = [];
+    let leftIndex = 0;
+    let rightIndex = 0;
+    let totalSwaps = 0;
+    
+    while (leftIndex < left.length && rightIndex < right.length) {
+        animations.push([leftIndex, rightIndex]);
+        totalSwaps++;
+
+        if (left[leftIndex] < right[rightIndex]) {
+            result.push(left[leftIndex]);
+            leftIndex++;
+        } else {
+            result.push(right[rightIndex]);
+            rightIndex++;
         }
     }
 
-    return  { animations, totalSwaps, totalShifts };
+    return { mergedArray: result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex)), totalSwaps };
 }
+
+export function mergeSortAnimations(array) {
+    let animations = [];
+    let totalSwaps = 0;
+
+    function mergeSort(array) {
+        if (array.length <= 1) return array;
+
+        const middle = Math.floor(array.length / 2);
+        const left = mergeSort(array.slice(0, middle));
+        const right = mergeSort(array.slice(middle));
+
+        const { mergedArray, totalSwaps: mergeSwaps } = merge(left, right, animations);
+        totalSwaps += mergeSwaps;
+
+        return mergedArray;
+    }
+
+    mergeSort(array);
+    return { animations, totalSwaps };
+}
+
+export function quickSortAnimations(array) {
+    const animations = [];
+    let totalSwaps = 0;
+
+    function partition(low, high) {
+        let pivot = array[high];
+        let i = low - 1;
+
+        for (let j = low; j <= high - 1; j++) {
+            if (array[j] < pivot) {
+                i++;
+                animations.push([i, j]);
+                [array[i], array[j]] = [array[j], array[i]];
+                totalSwaps++;
+            }
+        }
+        animations.push([i + 1, high]);
+        [array[i + 1], array[high]] = [array[high], array[i + 1]];
+        totalSwaps++;
+        return i + 1;
+    }
+
+    function quickSort(low, high) {
+        if (low < high) {
+            let pi = partition(low, high);
+
+            quickSort(low, pi - 1);
+            quickSort(pi + 1, high);
+        }
+    }
+
+    quickSort(0, array.length - 1);
+    return { animations, totalSwaps };
+}
+
+export function heapSortAnimations(array) {
+    const animations = [];
+    let totalSwaps = 0;
+
+    function heapify(n, i) {
+        let largest = i;
+        let left = 2 * i + 1;
+        let right = 2 * i + 2;
+
+        if (left < n && array[left] > array[largest]) {
+            largest = left;
+        }
+
+        if (right < n && array[right] > array[largest]) {
+            largest = right;
+        }
+
+        if (largest !== i) {
+            animations.push([i, largest]);
+            [array[i], array[largest]] = [array[largest], array[i]];
+            totalSwaps++;
+
+            heapify(n, largest);
+        }
+    }
+
+    function heapSort() {
+        let n = array.length;
+
+        for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+            heapify(n, i);
+        }
+
+        for (let i = n - 1; i > 0; i--) {
+            animations.push([0, i]);
+            [array[0], array[i]] = [array[i], array[0]];
+            totalSwaps++;
+
+            heapify(i, 0);
+        }
+    }
+
+    heapSort();
+    return { animations, totalSwaps };
+}
+
+
+
+
 
 

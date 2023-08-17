@@ -1,6 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./SortingVisualizer.css";
-import { bubbleSortAnimations, selectionSortAnimations, insertionSortAnimations } from './sortingAlgorithms';  // Importing sorting functions
+import { bubbleSortAnimations, 
+        selectionSortAnimations, 
+        insertionSortAnimations,
+        mergeSortAnimations,
+        quickSortAnimations,
+        heapSortAnimations
+      } from './sortingAlgorithms';  // Importing sorting functions
 
 const SortingVisualizer = () => {
     const [speed, setSpeed] = useState(300);  // 300ms as the initial speed
@@ -13,7 +19,17 @@ const SortingVisualizer = () => {
     const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubbleSort');
     const [numSwaps, setNumSwaps] = useState(0);
     const currentSortSwaps = useRef(0);
-    
+    const [animationIndex, setAnimationIndex] = useState(0); 
+
+    const sortAlgorithms = {
+      bubbleSort: bubbleSortAnimations,
+      selectionSort: selectionSortAnimations,
+      insertionSort: insertionSortAnimations,
+      mergeSort: mergeSortAnimations,
+      quickSort: quickSortAnimations,
+      heapSort: heapSortAnimations
+  };
+
     function restart() {
         setArray([...initialArray.current]);  // Reset to the initial state of the array
         setNumSwaps(0);  // Reset the swap counter
@@ -27,39 +43,38 @@ const SortingVisualizer = () => {
     }
 
     function animateSort(animations) {
-        setIsAnimating(true);
-        animations.forEach(([firstIdx, secondIdx], idx) => {
-            const timeout = setTimeout(() => {
-                if (!animationActive.current) return;
-    
-                setArray(prevArray => {
-                    const newArray = [...prevArray];
-                    let temp = newArray[firstIdx];
-                    newArray[firstIdx] = newArray[secondIdx];
-                    newArray[secondIdx] = temp;
-                    return newArray;
-                });
-    
-                // Update the swap count for each animation
-                setNumSwaps(prevNumSwaps => prevNumSwaps + 1);
-    
-                if (idx === animations.length - 1) {
-                    setIsAnimating(false);
-                }
-            }, idx * speed);
-    
-            timeouts.current.push(timeout);
-        });
-    }
+      setIsAnimating(true);
+  
+      // Begin the animation from animationIndex
+      for (let idx = animationIndex; idx < animations.length; idx++) {
+          const [firstIdx, secondIdx] = animations[idx];
+          const timeout = setTimeout(() => {
+              if (!animationActive.current) return;
+  
+              setArray(prevArray => {
+                  const newArray = [...prevArray];
+                  let temp = newArray[firstIdx];
+                  newArray[firstIdx] = newArray[secondIdx];
+                  newArray[secondIdx] = temp;
+                  return newArray;
+              });
+  
+              // Update the swap count and animation index for each animation
+              setNumSwaps(prevNumSwaps => prevNumSwaps + 1);
+              setAnimationIndex(prevIndex => prevIndex + 1);
+  
+              if (idx === animations.length - 1) {
+                  setIsAnimating(false);
+              }
+          }, (idx - animationIndex) * speed);
+  
+          timeouts.current.push(timeout);
+      }
+  }
     
 
     function handleSort() {
         animationActive.current = true;
-        const sortAlgorithms = {
-            bubbleSort: bubbleSortAnimations,
-            selectionSort: selectionSortAnimations,
-            insertionSort: insertionSortAnimations
-        };
 
         const { animations, totalSwaps } = sortAlgorithms[selectedAlgorithm](array);
         currentSortSwaps.current = totalSwaps;
@@ -74,6 +89,11 @@ const SortingVisualizer = () => {
         setNumSwaps(currentSortSwaps.current);
     }
 
+
+  
+  
+  
+
     return (
     <div className="SortingVisualizer">
         <div className="controlGroup topControl">
@@ -81,11 +101,21 @@ const SortingVisualizer = () => {
             <option value="bubbleSort">Bubble Sort</option>
             <option value="selectionSort">Selection Sort</option>
             <option value="insertionSort">Insertion Sort</option>
+            <option value="mergeSort">Merge Sort</option>
+            <option value="quickSort">Quick Sort</option>
+            <option value="heapSort">Heap Sort</option>
         </select>
 
+
         <div className="speedControl">
-            <button onClick={() => setSpeed(prevSpeed => Math.max(50, prevSpeed - 50))}>Speed Up</button>
-            <button onClick={() => setSpeed(prevSpeed => prevSpeed + 50)}>Slow Down</button>
+            <button onClick={() => {
+                setSpeed(prevSpeed => Math.max(50, prevSpeed - 50));
+            }}>Speed Up</button>
+
+            <button onClick={() => {
+                setSpeed(prevSpeed => prevSpeed + 50);
+            }}>Slow Down</button>
+
             <p>Current Speed: {speed}ms</p>
         </div>
     </div>
