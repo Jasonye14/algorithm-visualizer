@@ -49,10 +49,10 @@ export function selectionSortAnimations(array) {
     return  { animations, totalSwaps };
 }
 
-export function insertionSortAnimations(arr) { // technically these are shifts
+export function insertionSortAnimations(array) { // technically these are shifts
     const animations = [];
     let totalSwaps = 0;
-    let tempArray = [...arr];
+    let tempArray = [...array];
 
     for (let i = 1; i < tempArray.length; i++) {
         let key = tempArray[i];
@@ -71,48 +71,53 @@ export function insertionSortAnimations(arr) { // technically these are shifts
     return { animations, totalSwaps};
 }
 
-function merge(left, right, animations) {
-    let result = [];
-    let leftIndex = 0;
-    let rightIndex = 0;
-    let totalSwaps = 0;
-    
-    while (leftIndex < left.length && rightIndex < right.length) {
-        animations.push([leftIndex, rightIndex]);
-        totalSwaps++;
+export function mergeSortAnimations(array) {
+    const animations = [];
+    if (array.length <= 1) return array;
+    const auxiliaryArray = array.slice();
+    mergeSortHelper(array, 0, array.length - 1, auxiliaryArray, animations);
+    return { animations, totalSwaps: animations.length };
+}
 
-        if (left[leftIndex] < right[rightIndex]) {
-            result.push(left[leftIndex]);
-            leftIndex++;
+function mergeSortHelper(mainArray, startIdx, endIdx, auxiliaryArray, animations) {
+    if (startIdx === endIdx) return;
+    const middleIdx = Math.floor((startIdx + endIdx) / 2);
+    mergeSortHelper(auxiliaryArray, startIdx, middleIdx, mainArray, animations);
+    mergeSortHelper(auxiliaryArray, middleIdx + 1, endIdx, mainArray, animations);
+    doMerge(mainArray, startIdx, middleIdx, endIdx, auxiliaryArray, animations);
+}
+
+function doMerge(mainArray, startIdx, middleIdx, endIdx, auxiliaryArray, animations) {
+    let k = startIdx;
+    let i = startIdx;
+    let j = middleIdx + 1;
+
+    while (i <= middleIdx && j <= endIdx) {
+        animations.push([i, j, false]);  // Comparison
+        if (auxiliaryArray[i] <= auxiliaryArray[j]) {
+            animations.push([k, auxiliaryArray[i], true]);  // Overwrite with value
+            mainArray[k++] = auxiliaryArray[i++];
         } else {
-            result.push(right[rightIndex]);
-            rightIndex++;
+            animations.push([k, auxiliaryArray[j], true]);  // Overwrite with value
+            mainArray[k++] = auxiliaryArray[j++];
         }
     }
 
-    return { mergedArray: result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex)), totalSwaps };
-}
-
-export function mergeSortAnimations(array) {
-    let animations = [];
-    let totalSwaps = 0;
-
-    function mergeSort(array) {
-        if (array.length <= 1) return array;
-
-        const middle = Math.floor(array.length / 2);
-        const left = mergeSort(array.slice(0, middle));
-        const right = mergeSort(array.slice(middle));
-
-        const { mergedArray, totalSwaps: mergeSwaps } = merge(left, right, animations);
-        totalSwaps += mergeSwaps;
-
-        return mergedArray;
+    while (i <= middleIdx) {
+        animations.push([i, i, false]);  // Comparison
+        animations.push([k, auxiliaryArray[i], true]);  // Overwrite with value
+        mainArray[k++] = auxiliaryArray[i++];
     }
 
-    mergeSort(array);
-    return { animations, totalSwaps };
+    while (j <= endIdx) {
+        animations.push([j, j, false]);  // Comparison
+        animations.push([k, auxiliaryArray[j], true]);  // Overwrite with value
+        mainArray[k++] = auxiliaryArray[j++];
+    }
 }
+
+
+
 
 export function quickSortAnimations(array) {
     const animations = [];
