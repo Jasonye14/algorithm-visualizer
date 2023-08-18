@@ -21,15 +21,19 @@
 1. **Clone** the repository:
    ```bash
    git clone https://github.com/your-username/sorting-visualizer.git
+   
 2. Navigate to the project:
    ```bash
    cd sorting-visualizer
+   
 3. Install Dependencies:
   ```bash
    npm install
+
 4. Start the server:
   ```bash
    npm start
+
 5. Visit http://localhost:3000 in your browser.
 
 
