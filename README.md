@@ -29,14 +29,14 @@
    ```
    
 3. Install Dependencies:
-  ```bash
+   ```bash
    npm install
    ```
 
 4. Start the server:
-  ```bash
+   ```bash
    npm start
- ```
+   ```
 
 5. Visit http://localhost:3000 in your browser.
 
