@@ -17,6 +17,7 @@
 
 .topControl, .bottomControl {
     transition: background-color 0.3s;
+    background-color: #e0e2e4;
 }
 
 .topControl:hover, .bottomControl:hover {
@@ -95,4 +96,9 @@
 
 .infoDisplay {
     margin-top: 15px;
+}
+
+.settingsBox {
+    float: left;
+    /* Other styles... */
 }
