@@ -8,6 +8,7 @@ import { bubbleSortAnimations,
         heapSortAnimations
       } from './sortingAlgorithms';  // Importing sorting functions
 
+
 const SortingVisualizer = () => {
     const [speed, setSpeed] = useState(300);  // 300ms as the initial speed
     const [isAnimating, setIsAnimating] = useState(false);
@@ -43,7 +44,8 @@ const SortingVisualizer = () => {
         return Array.from({ length: 50 }, () => Math.floor(Math.random() * 140) + 10);
     }
 
-    function animateSort(animations) {
+    function animateSortMerge(animations) {
+      console.log(animations);
       setIsAnimating(true);
   
       animations.forEach((animation, idx) => {
@@ -75,18 +77,49 @@ const SortingVisualizer = () => {
           timeouts.current.push(timeout);
       });
   }
+
+  function animateSort(animations) {
+    setIsAnimating(true);
+    animations.forEach(([firstIdx, secondIdx], idx) => {
+        const timeout = setTimeout(() => {
+            if (!animationActive.current) return;
+
+            setArray(prevArray => {
+                const newArray = [...prevArray];
+                let temp = newArray[firstIdx];
+                newArray[firstIdx] = newArray[secondIdx];
+                newArray[secondIdx] = temp;
+                return newArray;
+            });
+
+            // Update the swap count for each animation
+            setNumSwaps(prevNumSwaps => prevNumSwaps + 1);
+
+            if (idx === animations.length - 1) {
+                setIsAnimating(false);
+            }
+        }, idx * speed);
+
+        timeouts.current.push(timeout);
+    });
+}
   
-
+function handleSort() {
+  animationActive.current = true;
   
-    
+  // Create a deep copy of the array for generating animations
+  const arrayCopy = [...array];
+  const { animations, totalSwaps } = sortAlgorithms[selectedAlgorithm](arrayCopy);
 
-    function handleSort() {
-        animationActive.current = true;
+  currentSortSwaps.current = totalSwaps;
 
-        const { animations, totalSwaps } = sortAlgorithms[selectedAlgorithm](array);
-        currentSortSwaps.current = totalSwaps;
-        animateSort(animations);
-    }
+  if (selectedAlgorithm === 'mergeSort') {
+      animateSortMerge(animations);
+  } else {
+      animateSort(animations);
+  }
+}
+
 
     function finishSorting() {
         timeouts.current.forEach(timeout => clearTimeout(timeout));
