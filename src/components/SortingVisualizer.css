@@ -15,12 +15,12 @@
     box-sizing: border-box;
 }
 
-.topControl {
-    margin-bottom: 30px;
+.topControl, .bottomControl {
+    transition: background-color 0.3s; /* Smooth transition for hover effects */
 }
 
-.bottomControl {
-    margin-top: 30px;
+.topControl:hover, .bottomControl:hover {
+    background-color: #f1f1f1; /* Slight shade change on hover */
 }
 
 .speedControl {
@@ -42,14 +42,34 @@
     width: 90%; /* To keep some spacing from the edge of the screen */
     border: 2px solid #343a40; /* Dark Gray Border */
     padding: 20px 0;
-    background-color: #ffffff; /* White Background for Contrast */
+    /*background-color: #ffffff;  White Background for Contrast */
+    border-radius: 10px; /* Rounded Corners for the array container */
 }
 
 .arrayContainer > div {
     width: 10px;
     margin: 0 2px;
-    background-color: #007BFF;
+    background-color: rgb(22,132,255);  /*blue for the majority of bars */
     transition: height 0.3s, background-color 0.3s;
+    border-radius: 5px 5px 0 0; /* Rounded top corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for bars */
+}
+
+.arrayContainer > div:hover {
+    transform: scaleY(1.05);
+    background-color: #FFD54F; /* Light hover color */
+}
+
+.arrayContainer > div.action {
+    background: linear-gradient(to top, #42A5F5, #64B5F6);
+}
+
+.arrayContainer > div.swap {
+    background-color: #FFC947; /* Swap color */
+}
+
+.arrayContainer > div.sorted {
+    background-color: #81C784; /* Soft green for sorted bars */
 }
 
 .SortingVisualizer button {
@@ -60,10 +80,13 @@
     background-color: #007BFF; /* Primary Color */
     color: #ffffff; /* White Text */
     cursor: pointer; /* Hand Cursor for Interactivity */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Box shadow for buttons */
+    transition: background-color 0.3s; /* Smooth transition for hover effects */
 }
 
 .SortingVisualizer button:hover {
     background-color: #0056b3; /* Slightly Darker Shade for Hover */
+    box-shadow: 0 2px 7px rgba(0,0,0,0.2); /* More prominent shadow on hover */
 }
 
 .SortingVisualizer select, 
@@ -74,5 +97,3 @@
 .infoDisplay {
     margin-top: 10px;
 }
-
-/* //#007BFF */
