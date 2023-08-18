@@ -133,10 +133,6 @@ function doMerge(
     }
 }
 
-
-
-
-
 export function quickSortAnimations(array) {
     const animations = [];
     let totalSwaps = 0;
@@ -144,20 +140,25 @@ export function quickSortAnimations(array) {
     function partition(low, high) {
         let pivot = array[high];
         let i = low - 1;
-
+    
+        animations.push(["pivot", high]);  // Mark the pivot element for animation
+    
         for (let j = low; j <= high - 1; j++) {
             if (array[j] < pivot) {
                 i++;
-                animations.push([i, j]);
+                animations.push(["swap", i, j]);
                 [array[i], array[j]] = [array[j], array[i]];
                 totalSwaps++;
             }
         }
-        animations.push([i + 1, high]);
+        animations.push(["swap", i + 1, high]);
+        animations.push(["unpivot", high]);  // Unmark the pivot element after partitioning
         [array[i + 1], array[high]] = [array[high], array[i + 1]];
         totalSwaps++;
+    
         return i + 1;
     }
+    
 
     function quickSort(low, high) {
         if (low < high) {
@@ -172,7 +173,8 @@ export function quickSortAnimations(array) {
     return { animations, totalSwaps };
 }
 
-export function heapSortAnimations(array) {
+export function heapSortAnimations(originalArray) {
+    const array = [...originalArray];
     const animations = [];
     let totalSwaps = 0;
 
@@ -190,10 +192,9 @@ export function heapSortAnimations(array) {
         }
 
         if (largest !== i) {
-            animations.push([i, largest]);
+            animations.push(["swap", i, largest]);
             [array[i], array[largest]] = [array[largest], array[i]];
             totalSwaps++;
-
             heapify(n, largest);
         }
     }
@@ -206,10 +207,9 @@ export function heapSortAnimations(array) {
         }
 
         for (let i = n - 1; i > 0; i--) {
-            animations.push([0, i]);
+            animations.push(["swap", 0, i]);
             [array[0], array[i]] = [array[i], array[0]];
             totalSwaps++;
-
             heapify(i, 0);
         }
     }
@@ -217,6 +217,8 @@ export function heapSortAnimations(array) {
     heapSort();
     return { animations, totalSwaps };
 }
+
+
 
 
 
