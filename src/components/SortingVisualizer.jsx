@@ -40,7 +40,7 @@ const SortingVisualizer = () => {
 
   function generateRandomArray() {
     return Array.from(
-      { length: 50 },
+      { length: 80 },
       () => Math.floor(Math.random() * 140) + 10
     );
   }
@@ -309,7 +309,7 @@ const SortingVisualizer = () => {
             onMouseEnter={() => setHoveredIdx(idx)}
             onMouseLeave={() => setHoveredIdx(null)}
             style={{
-              height: `${value}px`,
+              height: `${value * 2}px`,
               width: "10px",
               margin: "0 2px",
               background: `rgba(0,123,255, ${value / 150})`,

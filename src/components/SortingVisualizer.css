@@ -3,33 +3,31 @@
     flex-direction: column;
     align-items: center;
     height: 100vh;
-    background-color: #f8f9fa; /* Light Gray Background */
+    background-color: #f0f3f4; /* Updated Soft Gray Background */
     font-family: 'Arial', sans-serif;
 }
 
 .controlGroup {
     display: flex;
-    justify-content: space-between; /* To space out the children elements */
+    justify-content: space-between;
     width: 100%;
-    padding: 10px 5%; /* To give some space on the sides */
+    padding: 20px 10%; /* Increased side padding */
     box-sizing: border-box;
 }
 
 .topControl, .bottomControl {
-    transition: background-color 0.3s; /* Smooth transition for hover effects */
+    transition: background-color 0.3s;
 }
 
 .topControl:hover, .bottomControl:hover {
-    background-color: #f1f1f1; /* Slight shade change on hover */
+    background-color: #e0e2e4; /* Slight shade change on hover */
 }
 
 .speedControl {
     display: flex;
     align-items: center;
-    
-    /* To space out the children elements */
     & > * {
-        margin-left: 10px;
+        margin-left: 15px; /* Increased spacing between elements */
     }
 }
 
@@ -38,62 +36,63 @@
     flex-wrap: nowrap;
     justify-content: center;
     align-items: flex-end;
-    margin-top: 50px; /* Added some top margin for spacing */
-    width: 90%; /* To keep some spacing from the edge of the screen */
-    border: 2px solid #343a40; /* Dark Gray Border */
-    padding: 20px 0;
-    /*background-color: #ffffff;  White Background for Contrast */
-    border-radius: 10px; /* Rounded Corners for the array container */
+    margin-top: 70px; /* Increased top margin */
+    width: 95%; /* To give it more space */
+    height: 40%;
+    border: 3px solid #acb5bd; /* Updated Border Color */
+    padding: 30px 0;
+    border-radius: 12px;
 }
 
 .arrayContainer > div {
-    width: 10px;
-    margin: 0 2px;
-    background-color: rgb(22,132,255);  /*blue for the majority of bars */
+    width: 20px; /* Increased bar width */
+    margin: 0 5px; /* Increased space between bars */
+    background-color: rgb(90,170,250); /* Updated blue color */
     transition: height 0.3s, background-color 0.3s;
-    border-radius: 5px 5px 0 0; /* Rounded top corners */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for bars */
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .arrayContainer > div:hover {
-    transform: scaleY(1.05);
-    background-color: #FFD54F; /* Light hover color */
+    transform: scaleY(1.08); /* More pronounced hover effect */
+    background-color: #FFC947; 
 }
 
 .arrayContainer > div.action {
-    background: linear-gradient(to top, #42A5F5, #64B5F6);
+    background: linear-gradient(to top, #7DAAE3, #9FBFE6);
 }
 
 .arrayContainer > div.swap {
-    background-color: #FFC947; /* Swap color */
+    background-color: #FFCC77; 
 }
 
 .arrayContainer > div.sorted {
-    background-color: #81C784; /* Soft green for sorted bars */
+    background-color: #AED9A0; 
 }
 
 .SortingVisualizer button {
-    margin-top: 20px;
-    padding: 10px 20px; /* Better padding for buttons */
-    border: none; 
-    border-radius: 5px; /* Rounded Corners */
-    background-color: #007BFF; /* Primary Color */
-    color: #ffffff; /* White Text */
-    cursor: pointer; /* Hand Cursor for Interactivity */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Box shadow for buttons */
-    transition: background-color 0.3s; /* Smooth transition for hover effects */
+    margin-top: 25px; 
+    padding: 12px 25px; /* Updated button size */
+    border: none;
+    border-radius: 7px;
+    background-color: #007BFF;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 3px 7px rgba(0,0,0,0.1);
+    transition: background-color 0.3s;
 }
 
 .SortingVisualizer button:hover {
-    background-color: #0056b3; /* Slightly Darker Shade for Hover */
-    box-shadow: 0 2px 7px rgba(0,0,0,0.2); /* More prominent shadow on hover */
+    background-color: #0056b3;
+    box-shadow: 0 3px 9px rgba(0,0,0,0.25);
 }
 
 .SortingVisualizer select, 
 .SortingVisualizer p {
-    margin-top: 10px;
+    margin-top: 15px; /* Increased spacing */
+    font-size: 16px; /* Bigger font size for modern look */
 }
 
 .infoDisplay {
-    margin-top: 10px;
+    margin-top: 15px;
 }
